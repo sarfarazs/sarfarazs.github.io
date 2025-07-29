@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greenlight Section 8 Opportunity Fund I</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .hero-bg {
+            background-image: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url('https://placehold.co/1600x900/334155/ffffff?text=Modern+Real+Estate');
+            background-size: cover;
+            background-position: center;
+        }
+        .metric-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .accordion-button.open {
+            background-color: #4f46e5;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <div class="hero-bg text-white">
+        <div class="container mx-auto px-6 py-20 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-4">Greenlight Section 8 Opportunity Fund I</h1>
+            <p class="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto mb-12">An institutional approach to acquiring and operating a de-risked portfolio of cash-flowing residential real estate.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="metric-card p-6 rounded-xl">
+                    <h3 class="text-lg font-semibold text-slate-300 mb-2">Total Purchasing Power</h3>
+                    <p class="text-4xl font-bold text-white">$16.67M</p>
+                </div>
+                <div class="metric-card p-6 rounded-xl">
+                    <h3 class="text-lg font-semibold text-slate-300 mb-2">Projected LP Distribution (Yr 1)</h3>
+                    <p id="heroLPDistribution" class="text-4xl font-bold text-white">$327k+</p>
+                </div>
+                <div class="metric-card p-6 rounded-xl">
+                    <h3 class="text-lg font-semibold text-slate-300 mb-2">Target Properties</h3>
+                    <p class="text-4xl font-bold text-white">~145</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-6 py-16">
+
+        <!-- Fund Structure & Capitalization Section -->
+        <div id="structure" class="mb-20">
+            <h2 class="text-4xl font-bold text-center mb-12">Fund Structure & Capitalization</h2>
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">The Partnership Model</h3>
+                    <p class="text-slate-600 mb-6">The fund is structured as a Limited Partnership (LP) to provide liability protection for investors while centralizing management. The cash flow split, adjustable in the analyzer below, ensures a direct alignment of interests between investors and the management team from day one.</p>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-indigo-600 mr-3 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                            <div>
+                                <h4 class="font-semibold">Limited Partners (LPs)</h4>
+                                <p class="text-slate-500">Provide the $5M equity capital. Liability is limited to their investment. Receive their share of distributable cash flow.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-indigo-600 mr-3 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            <div>
+                                <h4 class="font-semibold">General Partner (GP)</h4>
+                                <p class="text-slate-500">Manages all fund operations, from acquisition to exit. Receives their share of distributable cash flow as a performance fee.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                     <h3 class="text-2xl font-bold mb-4 text-center">Use of Proceeds</h3>
+                     <canvas id="capitalizationChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Calculator Section -->
+        <div id="calculator" class="mb-12 bg-white p-8 md:p-12 rounded-2xl shadow-2xl">
+            <h2 class="text-4xl font-bold text-center mb-4">Interactive Deal Analyzer</h2>
+            <p class="text-center text-slate-600 max-w-2xl mx-auto mb-12">Adjust the inputs to model a potential property acquisition and see how it impacts cash flow and returns. This calculator uses a 70% LTV model.</p>
+
+            <div class="grid md:grid-cols-2 gap-12">
+                <!-- Input Controls -->
+                <div class="space-y-6">
+                    <div>
+                        <label for="purchasePrice" class="block font-medium mb-2">Purchase Price: <span id="purchasePriceValue" class="font-bold text-indigo-600">$100,000</span></label>
+                        <input type="range" id="purchasePrice" min="50000" max="250000" step="5000" value="100000" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                    <div>
+                        <label for="rehabCost" class="block font-medium mb-2">Rehab & Closing Costs: <span id="rehabCostValue" class="font-bold text-indigo-600">$15,000</span></label>
+                        <input type="range" id="rehabCost" min="5000" max="50000" step="1000" value="15000" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                     <div>
+                        <label for="grossRent" class="block font-medium mb-2">Gross Monthly Rent: <span id="grossRentValue" class="font-bold text-indigo-600">$1,400</span></label>
+                        <input type="range" id="grossRent" min="800" max="2500" step="25" value="1400" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                    <div>
+                        <label for="interestRate" class="block font-medium mb-2">Interest Rate: <span id="interestRateValue" class="font-bold text-indigo-600">7.5%</span></label>
+                        <input type="range" id="interestRate" min="5" max="10" step="0.1" value="7.5" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                    <div>
+                        <label for="opexInput" class="block font-medium mb-2">Operating Expenses (Annual)</label>
+                        <input type="number" id="opexInput" step="100" class="w-full p-2 border border-slate-300 rounded-lg">
+                        <p class="text-sm text-slate-500 mt-1">Default is 40% of EGI. You can override it here.</p>
+                    </div>
+                     <div>
+                        <label for="lpSplit" class="block font-medium mb-2">LP / GP Cash Flow Split: <span id="lpSplitValue" class="font-bold text-indigo-600">80% / 20%</span></label>
+                        <input type="range" id="lpSplit" min="50" max="95" step="1" value="80" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                </div>
+
+                <!-- Output Display -->
+                <div class="bg-slate-50 p-8 rounded-xl border border-slate-200">
+                    <h3 class="text-2xl font-bold mb-6">Single Property - Projected Annual Returns</h3>
+                    <div class="space-y-5">
+                        <div class="flex justify-between items-center">
+                            <span class="font-medium text-slate-600">Fund Equity Required:</span>
+                            <span id="equityRequired" class="font-bold text-xl text-slate-800">$34,500</span>
+                        </div>
+                        <hr>
+                        <div class="flex justify-between items-center">
+                            <span class="font-medium text-slate-600">Net Operating Income (NOI):</span>
+                            <span id="noi" class="font-bold text-xl text-slate-800">$9,576</span>
+                        </div>
+                        <hr>
+                        <div class="flex justify-between items-center">
+                            <span class="font-medium text-slate-600">Total Annual Cash Flow:</span>
+                            <span id="totalCashFlow" class="font-bold text-xl text-green-600">$2,820</span>
+                        </div>
+                        <hr>
+                        <div class="bg-indigo-50 p-4 rounded-lg">
+                            <div class="flex justify-between items-center mb-2">
+                                <span id="lpDistributionLabel" class="font-semibold text-indigo-800">LP Distribution (80%):</span>
+                                <span id="lpDistribution" class="font-bold text-2xl text-indigo-600">$2,256</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-indigo-800">LP Cash-on-Cash Return:</span>
+                                <span id="lpReturn" class="font-bold text-2xl text-indigo-600">6.5%</span>
+                            </div>
+                        </div>
+                         <div class="bg-slate-200 p-4 rounded-lg">
+                            <div class="flex justify-between items-center">
+                                <span id="gpDistributionLabel" class="font-semibold text-slate-800">GP Distribution (20%):</span>
+                                <span id="gpDistribution" class="font-bold text-xl text-slate-700">$564</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Portfolio Projection Section -->
+        <div id="portfolio-projection" class="mb-20 bg-slate-50 p-8 md:p-12 rounded-2xl border border-slate-200">
+            <h2 class="text-4xl font-bold text-center mb-4">Portfolio-Level Annual Projections</h2>
+            <p class="text-center text-slate-600 max-w-2xl mx-auto mb-12">Enter the number of properties to visualize the total annual cash flow for the entire fund, based on the single-property model above.</p>
+            <div class="max-w-xs mx-auto mb-8">
+                <label for="numProperties" class="block font-medium mb-2 text-center">Number of Properties in Portfolio</label>
+                <input type="number" id="numProperties" value="145" class="w-full p-3 text-center text-xl font-bold border border-slate-300 rounded-lg">
+            </div>
+            <div class="max-w-4xl mx-auto">
+                <canvas id="portfolioCashFlowChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Investment Thesis & Strategy -->
+        <div id="strategy" class="mb-20">
+            <h2 class="text-4xl font-bold text-center mb-12">Investment Thesis & Strategy</h2>
+            <div class="max-w-4xl mx-auto">
+                <div class="rounded-xl overflow-hidden shadow-lg bg-white">
+                    <div class="p-6">
+                        <div id="accordion-container">
+                            <!-- Item 1 -->
+                            <div class="accordion-item mb-2">
+                                <button class="accordion-button w-full text-left p-4 bg-slate-100 hover:bg-slate-200 rounded-lg font-semibold text-lg flex justify-between items-center">
+                                    <span>Core Investment Thesis</span>
+                                    <svg class="w-6 h-6 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </button>
+                                <div class="accordion-content">
+                                    <p class="p-4 text-slate-600">To acquire, lightly rehabilitate, and operate a geographically focused portfolio of single-family and small multifamily properties. The strategy leverages the Section 8 Housing Choice Voucher program to generate stable, predictable, and de-risked cash flow by mitigating the primary risk of private rentals: tenant non-payment.</p>
+                                </div>
+                            </div>
+                            <!-- Item 2 -->
+                            <div class="accordion-item mb-2">
+                                <button class="accordion-button w-full text-left p-4 bg-slate-100 hover:bg-slate-200 rounded-lg font-semibold text-lg flex justify-between items-center">
+                                    <span>Data-Driven Market Selection</span>
+                                     <svg class="w-6 h-6 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </button>
+                                <div class="accordion-content">
+                                    <p class="p-4 text-slate-600">The fund targets markets with the most favorable ratio of HUD Fair Market Rents (FMR) to median home prices. This arbitrage is the primary driver of cash flow. Key criteria include:
+                                        <ul class="list-disc list-inside mt-2 space-y-1">
+                                            <li><b>High Rent-to-Price Ratio:</b> Targeting areas like Cleveland, Detroit, and Indianapolis.</li>
+                                            <li><b>Stable Economic Base:</b> Ensuring long-term demand and potential for modest appreciation.</li>
+                                            <li><b>Landlord-Friendly Regulations:</b> Prioritizing states with clear and efficient landlord-tenant laws.</li>
+                                            <li><b>Liquid Housing Stock:</b> Ensuring an adequate supply of properties in our target price range.</li>
+                                        </ul>
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- Item 3 -->
+                            <div class="accordion-item">
+                                <button class="accordion-button w-full text-left p-4 bg-slate-100 hover:bg-slate-200 rounded-lg font-semibold text-lg flex justify-between items-center">
+                                    <span>"HQS-Plus" Operational Standard</span>
+                                     <svg class="w-6 h-6 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </button>
+                                <div class="accordion-content">
+                                    <p class="p-4 text-slate-600">We view HUD's Housing Quality Standards (HQS) not as a minimum requirement, but as a blueprint for our renovations. By investing slightly more upfront in durable, long-lasting repairs and components (an "HQS-Plus" standard), we significantly reduce ongoing maintenance costs, improve tenant satisfaction, and ensure seamless annual inspections. This discipline turns a regulatory hurdle into a tool for disciplined asset preservation and improved NOI.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exit Strategies Section -->
+        <div id="exit" class="mb-16">
+            <h2 class="text-4xl font-bold text-center mb-12">Clear & Viable Exit Strategies</h2>
+            <div class="grid md:grid-cols-3 gap-8 text-center">
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <div class="bg-indigo-100 text-indigo-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m-1 4h1m5-4h1m-1 4h1m-1-4h1m-1 4h1"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">1. Stabilized Portfolio Sale</h3>
+                    <p class="text-slate-600">The primary exit is the sale of the entire portfolio to a larger institutional investor (e.g., REIT, PE Fund). This offers efficiency, lower costs, and a potential "portfolio premium."</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <div class="bg-indigo-100 text-indigo-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">2. Opportunistic Individual Sales</h3>
+                    <p class="text-slate-600">We retain flexibility to sell individual assets if a sub-market sees rapid appreciation, allowing us to realize gains and reallocate capital strategically during the hold period.</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <div class="bg-indigo-100 text-indigo-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h5V4H4zm0 12v5h5v-5H4zM15 4v5h5V4h-5zm0 12v5h5v-5h-5z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">3. Refinance & Hold</h3>
+                    <p class="text-slate-600">A contingency plan for unfavorable markets. We can refinance the portfolio to return significant capital to LPs while holding the assets until conditions improve for a sale.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-800 text-slate-400 py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2025 Greenlight Opportunity Funds. All Rights Reserved.</p>
+            <p class="text-sm mt-2">This is not an offer to sell securities. All investments involve risk and may result in partial or total loss. Projections are based on assumptions and are not guaranteed.</p>
+        </div>
+    </footer>
+
+
+    <script>
+        // --- GLOBAL STATE ---
+        let portfolioChart;
+        let singlePropertyCashFlow = 0;
+
+        // --- DOM ELEMENTS ---
+        const purchasePriceSlider = document.getElementById('purchasePrice');
+        const rehabCostSlider = document.getElementById('rehabCost');
+        const grossRentSlider = document.getElementById('grossRent');
+        const interestRateSlider = document.getElementById('interestRate');
+        const opexInput = document.getElementById('opexInput');
+        const lpSplitSlider = document.getElementById('lpSplit');
+        const numPropertiesInput = document.getElementById('numProperties');
+
+        const purchasePriceValue = document.getElementById('purchasePriceValue');
+        const rehabCostValue = document.getElementById('rehabCostValue');
+        const grossRentValue = document.getElementById('grossRentValue');
+        const interestRateValue = document.getElementById('interestRateValue');
+        const lpSplitValue = document.getElementById('lpSplitValue');
+
+        const equityRequiredEl = document.getElementById('equityRequired');
+        const noiEl = document.getElementById('noi');
+        const totalCashFlowEl = document.getElementById('totalCashFlow');
+        const lpDistributionLabel = document.getElementById('lpDistributionLabel');
+        const gpDistributionLabel = document.getElementById('gpDistributionLabel');
+        const lpDistributionEl = document.getElementById('lpDistribution');
+        const gpDistributionEl = document.getElementById('gpDistribution');
+        const lpReturnEl = document.getElementById('lpReturn');
+        const heroLPDistributionEl = document.getElementById('heroLPDistribution');
+
+
+        // --- FORMATTERS ---
+        const formatCurrency = (value) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value);
+        const formatPercent = (value) => new Intl.NumberFormat('en-US', { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(value);
+        const formatHeroCurrency = (value) => {
+            if (value >= 1000000) {
+                return `$${(value / 1000000).toFixed(2)}M+`;
+            }
+            if (value >= 1000) {
+                return `$${(value / 1000).toFixed(0)}k+`;
+            }
+            return `${formatCurrency(value)}+`;
+        };
+
+        // --- CALCULATIONS ---
+        function calculate(isSliderChange = false) {
+            const purchasePrice = parseFloat(purchasePriceSlider.value);
+            const rehabCost = parseFloat(rehabCostSlider.value);
+            const grossRent = parseFloat(grossRentSlider.value);
+            const interestRate = parseFloat(interestRateSlider.value) / 100;
+            const lpSplit = parseFloat(lpSplitSlider.value) / 100;
+            const gpSplit = 1 - lpSplit;
+
+            // Update display values for sliders
+            purchasePriceValue.textContent = formatCurrency(purchasePrice);
+            rehabCostValue.textContent = formatCurrency(rehabCost);
+            grossRentValue.textContent = formatCurrency(grossRent);
+            interestRateValue.textContent = formatPercent(interestRate);
+            lpSplitValue.textContent = `${(lpSplit * 100).toFixed(0)}% / ${(gpSplit * 100).toFixed(0)}%`;
+
+            // Core Calculations
+            const totalProjectCost = purchasePrice + rehabCost;
+            const loanAmount = totalProjectCost * 0.70;
+            const equityRequired = totalProjectCost * 0.30;
+            const annualGrossRent = grossRent * 12;
+            const vacancy = annualGrossRent * 0.05;
+            const egi = annualGrossRent - vacancy;
+
+            if (isSliderChange) {
+                const defaultOpex = egi * 0.40;
+                opexInput.value = defaultOpex.toFixed(0);
+            }
+
+            const opex = parseFloat(opexInput.value) || 0;
+            const noi = egi - opex;
+
+            const monthlyInterestRate = interestRate / 12;
+            const numberOfPayments = 30 * 12;
+            const monthlyPayment = loanAmount * (monthlyInterestRate * Math.pow(1 + monthlyInterestRate, numberOfPayments)) / (Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1);
+            const annualDebtService = monthlyPayment * 12;
+
+            singlePropertyCashFlow = noi - annualDebtService;
+            const lpDistribution = singlePropertyCashFlow * lpSplit;
+            const gpDistribution = singlePropertyCashFlow * gpSplit;
+            const lpReturn = equityRequired > 0 ? lpDistribution / equityRequired : 0;
+
+            // Update Single Property UI
+            equityRequiredEl.textContent = formatCurrency(equityRequired);
+            noiEl.textContent = formatCurrency(noi);
+            totalCashFlowEl.textContent = formatCurrency(singlePropertyCashFlow);
+            lpDistributionLabel.textContent = `LP Distribution (${(lpSplit * 100).toFixed(0)}%):`;
+            gpDistributionLabel.textContent = `GP Distribution (${(gpSplit * 100).toFixed(0)}%):`;
+            lpDistributionEl.textContent = formatCurrency(lpDistribution);
+            gpDistributionEl.textContent = formatCurrency(gpDistribution);
+            lpReturnEl.textContent = formatPercent(lpReturn);
+
+            // Update the portfolio chart and hero metric
+            updatePortfolioMetrics();
+        }
+
+        function updatePortfolioMetrics() {
+            const numProperties = parseInt(numPropertiesInput.value) || 0;
+            const lpSplit = parseFloat(lpSplitSlider.value) / 100;
+            const gpSplit = 1 - lpSplit;
+
+            const totalLPDistribution = singlePropertyCashFlow * lpSplit * numProperties;
+            const totalGPDistribution = singlePropertyCashFlow * gpSplit * numProperties;
+
+            // Update portfolio bar chart
+            portfolioChart.data.datasets[0].data = [totalLPDistribution, totalGPDistribution];
+            portfolioChart.update();
+
+            // Update hero metric
+            heroLPDistributionEl.textContent = formatHeroCurrency(totalLPDistribution);
+        }
+
+        // --- CHART INITIALIZATION ---
+        function initializeCharts() {
+            const capCtx = document.getElementById('capitalizationChart').getContext('2d');
+            new Chart(capCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['LP Equity (30%)', 'Anticipated Debt (70%)'],
+                    datasets: [{
+                        data: [5000000, 11666667],
+                        backgroundColor: ['#4f46e5', '#e5e7eb'],
+                        borderColor: '#ffffff',
+                        borderWidth: 4
+                    }]
+                },
+                options: {
+                    responsive: true, cutout: '70%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 14, family: 'Inter' }, padding: 20 }},
+                        tooltip: { callbacks: { label: (c) => `${c.label}: ${formatCurrency(c.parsed)}` }}
+                    }
+                }
+            });
+
+            const portfolioCtx = document.getElementById('portfolioCashFlowChart').getContext('2d');
+            portfolioChart = new Chart(portfolioCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Total LP Distribution', 'Total GP Distribution'],
+                    datasets: [{
+                        label: 'Annual Cash Flow',
+                        data: [0, 0],
+                        backgroundColor: ['#4f46e5', '#a5b4fc'],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true, indexAxis: 'y',
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: true, text: 'Total Projected Annual Distribution by Partner', font: { size: 16 } },
+                        tooltip: { callbacks: { label: (c) => formatCurrency(c.raw) }}
+                    },
+                    scales: {
+                        x: {
+                            ticks: { callback: (v) => formatCurrency(v).replace(/\,\d+$/, 'k') },
+                            title: { display: true, text: 'Amount ($)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- EVENT LISTENERS ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeCharts();
+            calculate(true);
+        });
+
+        [purchasePriceSlider, rehabCostSlider, grossRentSlider, interestRateSlider, lpSplitSlider].forEach(slider => {
+            slider.addEventListener('input', () => calculate(true));
+        });
+
+        opexInput.addEventListener('input', () => calculate(false));
+        numPropertiesInput.addEventListener('input', updatePortfolioMetrics);
+
+        // --- ACCORDION LOGIC ---
+        const accordionContainer = document.getElementById('accordion-container');
+        accordionContainer.addEventListener('click', (e) => {
+            const button = e.target.closest('.accordion-button');
+            if (!button) return;
+
+            const item = button.parentElement;
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('svg');
+
+            const allItems = accordionContainer.querySelectorAll('.accordion-item');
+            allItems.forEach(i => {
+                if (i !== item) {
+                    i.querySelector('.accordion-button').classList.remove('open');
+                    i.querySelector('.accordion-content').style.maxHeight = null;
+                    i.querySelector('svg').style.transform = 'rotate(0deg)';
+                }
+            });
+
+            button.classList.toggle('open');
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+                icon.style.transform = 'rotate(180deg)';
+            }
+        });
+    </script>
+
+</body>
+</html>
